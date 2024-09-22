@@ -20,7 +20,6 @@ model User {
   password   String
   created_at DateTime @default(now())
   expenses   Expense[]
-  incomes    Income[]
 }
 
 model Category {
@@ -40,15 +39,4 @@ model Expense {
 
   user     User     @relation(fields: [user_id], references: [user_id])
   category Category? @relation(fields: [category_id], references: [category_id])
-}
-
-model Income {
-  income_id       Int      @id @default(autoincrement())
-  user_id         Int
-  source          String
-  amount          Float
-  date_of_income  DateTime
-  created_at      DateTime @default(now())
-
-  user User @relation(fields: [user_id], references: [user_id])
 }
