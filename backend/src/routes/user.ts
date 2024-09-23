@@ -10,10 +10,6 @@ export const userRouter = new Hono<{
   };
 }>();
 
-userRouter.get("/a", (c)=>{
-    return c.text("HYPE")
-})
-
 userRouter.post("/signup", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.PDATABASE_URL,
@@ -55,6 +51,61 @@ userRouter.post("/signup", async (c) => {
     return c.json(
       {
         msg: "Something went Wrong",
+      },
+      500
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+});
+
+userRouter.post("/signin", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.PDATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const body = await c.req.json();
+    const user = await prisma.user.findFirst({
+      where: {
+        email: body.email,
+      },
+      select: {
+        user_id: true,
+        email: true,
+        password: true,
+      },
+    });
+    if (!user) {
+      return c.json(
+        {
+          msg: "No User Found",
+        },
+        400
+      );
+    }
+
+    if (body.password !== user.password) {
+      return c.json(
+        {
+          msg: "Wrong Password",
+        },
+        400
+      );
+    }
+
+    const token = await sign(
+      { user_id: user.user_id, email: user.email },
+      c.env.JWT_Secret
+    );
+
+    return c.json({
+      msg: "Sign In Successful",
+      token,
+    });
+  } catch {
+    return c.json(
+      {
+        msg: "Something Went Wrong",
       },
       500
     );
