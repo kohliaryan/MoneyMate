@@ -4,3 +4,4 @@ compatibility_flags = [ "nodejs_compat" ]
 
 # [vars]
 PDATABASE_URL = "${env:PDATABASE_URL}"
+JWT_Secret = "${env:JWT_Secret}"
