@@ -2,6 +2,3 @@ name = "backend"
 compatibility_date = "2024-09-22"
 compatibility_flags = [ "nodejs_compat" ]
 
-# [vars]
-PDATABASE_URL = "${env:PDATABASE_URL}"
-JWT_Secret = "${env:JWT_Secret}"
