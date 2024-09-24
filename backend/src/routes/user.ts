@@ -1,9 +1,11 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
-import { sign } from "hono/jwt";
 import { authMiddleware } from "../middleware/authorization";
-import { profileController, signinController, signupController } from "../controller/user";
+import {
+  profileController,
+  signinController,
+  signupController,
+  updateController,
+} from "../controller/user";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -15,7 +17,7 @@ export const userRouter = new Hono<{
   };
 }>();
 
-userRouter.post("/signup", signupController)
+userRouter.post("/signup", signupController);
 userRouter.post("/signin", signinController);
-
-userRouter.get("/profile", authMiddleware, profileController)
+userRouter.get("/profile", authMiddleware, profileController);
+userRouter.put("/update", authMiddleware, updateController);

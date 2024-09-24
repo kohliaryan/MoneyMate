@@ -118,7 +118,7 @@ export async function profileController(c: Context) {
     const user_id = c.get("user_id");
     const user = await prisma.user.findFirst({
       where: {
-        user_id: user_id
+        user_id: user_id,
       },
       select: {
         name: true,
@@ -133,7 +133,38 @@ export async function profileController(c: Context) {
       {
         msg: "Something went wrong!",
       },
-      400
+      500
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function updateController(c: Context) {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.PDATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const user_id = c.get("user_id");
+    const body = await c.req.json();
+    await prisma.user.update({
+      where: {
+        user_id: user_id,
+      },
+      data: {
+        name: body.name,
+      },
+    });
+    return c.json({
+      msg: "Update Successful",
+    });
+  } catch {
+    return c.json(
+      {
+        msg: "Something went wrong",
+      },
+      500
     );
   } finally {
     await prisma.$disconnect();
