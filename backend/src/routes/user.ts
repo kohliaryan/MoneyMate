@@ -3,7 +3,7 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import { authMiddleware } from "../middleware/authorization";
-import { signinController, signupController } from "../controller/user";
+import { profileController, signinController, signupController } from "../controller/user";
 
 export const userRouter = new Hono<{
   Bindings: {
@@ -18,8 +18,4 @@ export const userRouter = new Hono<{
 userRouter.post("/signup", signupController)
 userRouter.post("/signin", signinController);
 
-userRouter.get("/profile", authMiddleware, (c) => {
-  return c.json({
-    user_id: c.get("user_id"),
-  });
-});
+userRouter.get("/profile", authMiddleware, profileController)

@@ -109,3 +109,33 @@ export async function signinController(c: Context) {
     await prisma.$disconnect();
   }
 }
+
+export async function profileController(c: Context) {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.PDATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const user_id = c.get("user_id");
+    const user = await prisma.user.findFirst({
+      where: {
+        user_id: user_id
+      },
+      select: {
+        name: true,
+        email: true,
+        created_at: true,
+      },
+    });
+
+    return c.json(user);
+  } catch {
+    return c.json(
+      {
+        msg: "Something went wrong!",
+      },
+      400
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
