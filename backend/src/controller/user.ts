@@ -50,8 +50,6 @@ export async function signupController(c: Context) {
       },
       500
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -105,8 +103,6 @@ export async function signinController(c: Context) {
       },
       500
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -135,8 +131,6 @@ export async function profileController(c: Context) {
       },
       500
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -166,7 +160,5 @@ export async function updateController(c: Context) {
       },
       500
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

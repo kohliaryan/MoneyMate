@@ -22,13 +22,37 @@ export async function expenseAdd(c: Context){
         return c.json({
             msg: "Created Successfully"
         })
-      } catch(e) {
-        console.log(e)
+      } catch {
         return c.json({
             msg: "Something went wrong!"
         }, 500)
       }
-      finally {
-        await prisma.$disconnect()
+
+}
+
+export async function listController(c: Context) {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.PDATABASE_URL,
+      }).$extends(withAccelerate());
+
+      try{
+        const user_id = c.get("user_id");
+        
+        const expense_list = await prisma.expense.findMany({
+            where: {
+                user_id: user_id
+            },
+            select: {
+                amount: true,
+                description: true,
+                date_of_expense: true
+            }
+        })
+        return c.json(expense_list)
+
+      } catch {
+        return c.json({
+            msg: "Something went wrong!"
+        }, 500)
       }
 }

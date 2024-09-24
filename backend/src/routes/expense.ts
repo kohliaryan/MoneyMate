@@ -1,11 +1,8 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
-import { verify } from "hono/jwt";
 import { authMiddleware } from "../middleware/authorization";
-import { expenseAdd } from "../controller/expense";
+import { expenseAdd, listController } from "../controller/expense";
 
-export const expenseRoute = new Hono<{
+export const expenseRouter = new Hono<{
   Bindings: {
     PDATABASE_URL: string;
     JWT_Secret: string;
@@ -15,5 +12,6 @@ export const expenseRoute = new Hono<{
   };
 }>();
 
-expenseRoute.use(authMiddleware);
-expenseRoute.post("/add", expenseAdd)
+expenseRouter.use(authMiddleware);
+expenseRouter.post("/add", expenseAdd)
+expenseRouter.get("/list", listController)
