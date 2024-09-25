@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../middleware/authorization";
-import { expenseAdd, listController, updateExpense } from "../controller/expense";
+import { deleteExpense, expenseAdd, listController, updateExpense } from "../controller/expense";
 
 export const expenseRouter = new Hono<{
   Bindings: {
@@ -16,3 +16,4 @@ expenseRouter.use(authMiddleware);
 expenseRouter.post("/add", expenseAdd)
 expenseRouter.get("/list", listController)
 expenseRouter.put("/update/:expense_id", updateExpense)
+expenseRouter.delete("/delete/:expense_id", deleteExpense)

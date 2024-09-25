@@ -71,7 +71,7 @@ export async function updateExpense(c: Context) {
     await prisma.expense.update({
       where: {
         expense_id: Number(c.req.param("expense_id")),
-        user_id: user_id
+        user_id: user_id,
       },
       data: {
         amount: body.amount,
@@ -82,6 +82,31 @@ export async function updateExpense(c: Context) {
     return c.json({
       msg: "Successfully update",
     });
+  } catch {
+    return c.json(
+      {
+        msg: "Something went wrong!",
+      },
+      500
+    );
+  }
+}
+
+export async function deleteExpense(c: Context) {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.PDATABASE_URL,
+  }).$extends(withAccelerate());
+  try {
+    const user_id = c.get("user_id");
+    await prisma.expense.delete({
+      where: {
+        expense_id: Number(c.req.param("expense_id")),
+        user_id: user_id,
+      },
+    });
+    return c.json({
+      msg: "Deleted Successfully!"
+    })
   } catch {
     return c.json(
       {
