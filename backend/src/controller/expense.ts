@@ -3,10 +3,10 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
 
 export async function expenseAdd(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user_id = c.get("user_id");
     const body = await c.req.json();
     await prisma.expense.create({
@@ -62,10 +62,10 @@ export async function listController(c: Context) {
 }
 
 export async function updateExpense(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user_id = c.get("user_id");
     const body = await c.req.json();
     await prisma.expense.update({
@@ -105,8 +105,8 @@ export async function deleteExpense(c: Context) {
       },
     });
     return c.json({
-      msg: "Deleted Successfully!"
-    })
+      msg: "Deleted Successfully!",
+    });
   } catch {
     return c.json(
       {
