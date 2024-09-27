@@ -2,14 +2,20 @@ import { PrismaClient } from "@prisma/client/edge";
 import { sign } from "hono/jwt";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
+import { z } from "zod";
 
 export async function signupController(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
-
   try {
     const body = await c.req.json();
+    // if (!signupSchema.safeParse(body).success) {
+    //   return c.json({
+    //     msg: "Invalid Inputs",
+    //   }, 400);
+    // }
+
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
 
     const alreadyExists = await prisma.user.findFirst({
       where: {
@@ -54,11 +60,16 @@ export async function signupController(c: Context) {
 }
 
 export async function signinController(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
   try {
     const body = await c.req.json();
+    // if (!signinSchema.safeParse(body).success) {
+    //   return c.json({
+    //     msg: "Invalid Inputs",
+    //   }, 400);
+    // }
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user = await prisma.user.findFirst({
       where: {
         email: body.email,
@@ -107,10 +118,10 @@ export async function signinController(c: Context) {
 }
 
 export async function profileController(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user_id = c.get("user_id");
     const user = await prisma.user.findFirst({
       where: {
@@ -134,12 +145,12 @@ export async function profileController(c: Context) {
   }
 }
 
-export async function updateController(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
 
+export async function updateController(c: Context) {
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user_id = c.get("user_id");
     const body = await c.req.json();
     await prisma.user.update({

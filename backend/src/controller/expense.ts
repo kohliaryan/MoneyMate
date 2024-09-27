@@ -1,14 +1,20 @@
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
+import { z } from "zod";
 
 export async function expenseAdd(c: Context) {
   try {
+    const body = await c.req.json();
+    // if (!expenseAddSchema.safeParse(body).success){
+    //   return c.json({
+    //     msg: "Invalid Inputs"
+    //   }, 400)
+    // }
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
     }).$extends(withAccelerate());
     const user_id = c.get("user_id");
-    const body = await c.req.json();
     await prisma.expense.create({
       data: {
         user_id: user_id,
@@ -32,11 +38,11 @@ export async function expenseAdd(c: Context) {
 }
 
 export async function listController(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
-
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
+
     const user_id = c.get("user_id");
 
     const expense_list = await prisma.expense.findMany({
@@ -93,10 +99,10 @@ export async function updateExpense(c: Context) {
 }
 
 export async function deleteExpense(c: Context) {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.PDATABASE_URL,
-  }).$extends(withAccelerate());
   try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.PDATABASE_URL,
+    }).$extends(withAccelerate());
     const user_id = c.get("user_id");
     await prisma.expense.delete({
       where: {
