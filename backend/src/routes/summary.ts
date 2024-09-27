@@ -1,6 +1,9 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../middleware/authorization";
-import { summaryController } from "../controller/summary";
+import {
+  categoryExpenseController,
+  summaryController,
+} from "../controller/summary";
 
 export const summaryRouter = new Hono<{
   Bindings: {
@@ -13,4 +16,5 @@ export const summaryRouter = new Hono<{
 }>();
 
 summaryRouter.use(authMiddleware);
-summaryRouter.get("/", summaryController)
+summaryRouter.get("/", summaryController);
+summaryRouter.get("/category/:category_id", categoryExpenseController);
