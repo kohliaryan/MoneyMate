@@ -2,16 +2,23 @@ import { PrismaClient } from "@prisma/client/edge";
 import { sign } from "hono/jwt";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
-import { z } from "zod";
+import {
+  signinSchema,
+  signupSchema,
+  updateProfileSchema,
+} from "@aryankohli/moneymate-common";
 
 export async function signupController(c: Context) {
   try {
     const body = await c.req.json();
-    // if (!signupSchema.safeParse(body).success) {
-    //   return c.json({
-    //     msg: "Invalid Inputs",
-    //   }, 400);
-    // }
+    if (!signupSchema.safeParse(body).success) {
+      return c.json(
+        {
+          msg: "Invalid Inputs",
+        },
+        400
+      );
+    }
 
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
@@ -62,11 +69,14 @@ export async function signupController(c: Context) {
 export async function signinController(c: Context) {
   try {
     const body = await c.req.json();
-    // if (!signinSchema.safeParse(body).success) {
-    //   return c.json({
-    //     msg: "Invalid Inputs",
-    //   }, 400);
-    // }
+    if (!signinSchema.safeParse(body).success) {
+      return c.json(
+        {
+          msg: "Invalid Inputs",
+        },
+        400
+      );
+    }
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
     }).$extends(withAccelerate());
@@ -145,14 +155,21 @@ export async function profileController(c: Context) {
   }
 }
 
-
 export async function updateController(c: Context) {
   try {
+    const body = await c.req.json();
+    if (!updateProfileSchema.safeParse(body).success) {
+      return c.json(
+        {
+          msg: "Invalid Inputs",
+        },
+        400
+      );
+    }
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
     }).$extends(withAccelerate());
     const user_id = c.get("user_id");
-    const body = await c.req.json();
     await prisma.user.update({
       where: {
         user_id: user_id,

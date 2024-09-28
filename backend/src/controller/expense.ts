@@ -1,3 +1,4 @@
+import { expenseAddSchema, updateExpenseSchema } from "@aryankohli/moneymate-common";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
@@ -6,11 +7,11 @@ import { z } from "zod";
 export async function expenseAdd(c: Context) {
   try {
     const body = await c.req.json();
-    // if (!expenseAddSchema.safeParse(body).success){
-    //   return c.json({
-    //     msg: "Invalid Inputs"
-    //   }, 400)
-    // }
+    if (!expenseAddSchema.safeParse(body).success){
+      return c.json({
+        msg: "Invalid Inputs"
+      }, 400)
+    }
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
     }).$extends(withAccelerate());
@@ -69,11 +70,19 @@ export async function listController(c: Context) {
 
 export async function updateExpense(c: Context) {
   try {
+    const body = await c.req.json();
+    if (!updateExpenseSchema.safeParse(body).success) {
+      return c.json(
+        {
+          msg: "Invalid Inputs",
+        },
+        400
+      );
+    }
     const prisma = new PrismaClient({
       datasourceUrl: c.env.PDATABASE_URL,
     }).$extends(withAccelerate());
     const user_id = c.get("user_id");
-    const body = await c.req.json();
     await prisma.expense.update({
       where: {
         expense_id: Number(c.req.param("expense_id")),
