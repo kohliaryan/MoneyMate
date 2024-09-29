@@ -1,7 +1,7 @@
-**Money Manager** - Personal Expense Tracker
+**Money Mate** - Personal Expense Tracker
 ============================================
 
-**Money Manager** is a sleek, user-friendly web application designed to help users track and manage their personal expenses efficiently. With a focus on simplicity, powerful analytics, and customizable features, this app allows users to visualize and take control of their spending habits.
+**Money Mate** is a sleek, user-friendly web application designed to help users track and manage their personal expenses efficiently. With a focus on simplicity, powerful analytics, and customizable features, this app allows users to visualize and take control of their spending habits.
 
 **Features**
 ------------
@@ -114,7 +114,7 @@ bash
 Copy code
 
 `git clone https://github.com/kohliaryan/MoneyMate.git
-cd money-manager`
+cd MoneyMate`
 
 ### **2\. Install dependencies**
 
