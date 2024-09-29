@@ -113,7 +113,7 @@ bash
 
 Copy code
 
-`git clone https://github.com/your-username/money-manager.git
+`git clone https://github.com/kohliaryan/MoneyMate.git
 cd money-manager`
 
 ### **2\. Install dependencies**
@@ -145,7 +145,7 @@ Copy code
 
 ### **5\. Run the frontend**
 
-Go to the frontend folder (if separate) and start the frontend:
+Go to the frontend folder and start the frontend:
 
 bash
 
