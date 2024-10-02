@@ -3,7 +3,7 @@ export function Signin() {
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
         <h1 className="text-4xl font-extrabold text-center mb-4 font-poppins text-blue-600">
-          Money Manager
+          Money Mate
         </h1>
 
         <h2 className="text-3xl font-bold text-center mb-6 font-poppins text-gray-800">

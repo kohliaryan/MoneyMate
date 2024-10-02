@@ -1,0 +1,1 @@
+export const BACKEND_URL = "https://money-mate.kohliaryan2004.workers.dev"
