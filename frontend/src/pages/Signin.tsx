@@ -1,4 +1,19 @@
+import { SigninSchema } from "@aryankohli/moneymate-common";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../config";
+import axios, { AxiosError } from "axios";
+
 export function Signin() {
+  const [warning, setWarning] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const postInputs: SigninSchema = {
+    email,
+    password,
+  };
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
@@ -7,10 +22,36 @@ export function Signin() {
         </h1>
 
         <h2 className="text-3xl font-bold text-center mb-6 font-poppins text-gray-800">
-          Sign In
+          Sign In {warning}
         </h2>
 
-        <form>
+        <form
+          onSubmit={async (event) => {
+            event.preventDefault();
+            setLoading(true);
+
+            try {
+              const response = await axios.post(
+                `${BACKEND_URL}/api/v1/user/signin`,
+                postInputs
+              );
+              localStorage.setItem("token", `Bearer ${response.data.token}`);
+              navigate("/home");
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<{ msg: string }>;
+                setWarning(
+                  axiosError.response?.data?.msg ||
+                    "An error occurred. Please try again."
+                );
+              } else {
+                setWarning("An unexpected error occurred. Please try again.");
+              }
+            } finally {
+              setLoading(false);
+            }
+          }}
+        >
           <div className="mb-4">
             <label
               className="block text-gray-700 font-bold mb-2"
@@ -22,6 +63,8 @@ export function Signin() {
               type="email"
               id="email"
               className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -36,6 +79,10 @@ export function Signin() {
               type="password"
               id="password"
               className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              required
+              minLength={6}
+              autoComplete="on"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -46,7 +93,10 @@ export function Signin() {
 
         <p className="text-center mt-6 text-gray-600">
           Don't have an account?
-          <button className="text-green-500 font-bold ml-1 hover:underline">
+          <button
+            onClick={() => navigate("/signup")}
+            className="text-green-500 font-bold ml-1 hover:underline"
+          >
             Sign Up
           </button>
         </p>
